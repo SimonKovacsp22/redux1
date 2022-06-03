@@ -2,6 +2,8 @@ import React from 'react'
 import { Col, Container, Button, Containerutton} from 'react-bootstrap'
 import { connect } from 'react-redux'
 import {Link} from 'react-router-dom'
+import { REMOVE_FROM_FAVOURITES } from '../redux/reducers'
+
 const mapStateToProps = (state) => {
     return {
       favourites: state.favourites.content,
@@ -12,7 +14,7 @@ const mapStateToProps = (state) => {
     return {
       removeFromFav: (indexToRemove) => {
         dispatch({
-          type: 'REMOVE_FROM_FAVOURITES',
+          type: REMOVE_FROM_FAVOURITES ,
           payload: indexToRemove,
         })
       },

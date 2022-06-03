@@ -1,3 +1,4 @@
+ export const REMOVE_FROM_FAVOURITES ='REMOVE_FROM_FAVOURITES'
 const initialState = {
     favourites:{
         content:[]
@@ -39,3 +40,4 @@ const initialState = {
   }
   
   export default mainReducer
+  
