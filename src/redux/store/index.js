@@ -1,9 +1,13 @@
 
-import { configureStore } from '@reduxjs/toolkit'
-import mainReducer from '../reducers'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import favReducer from '../reducers/favReducer'
+import compReducer from '../reducers/compReducer'
 
 const store = configureStore({
-  reducer: mainReducer,
+  reducer: combineReducers({
+    fav: favReducer,
+    comp: compReducer,
+  }),
   // we're going to tell Redux which reducer function to use!
 })
 

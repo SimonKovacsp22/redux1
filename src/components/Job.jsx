@@ -2,6 +2,7 @@ import React from 'react'
 import { Row, Col,Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { addToFavouritesAction } from '../redux/Actions'
 
 const mapStateToProps = (state) => {
   return {}
@@ -10,12 +11,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addToFav: (company) => {
-      dispatch({
-        type: 'ADD_TO_FAVOURITES', 
-        payload: company, 
-      })
-    },
+    addToFav: (companyToAdd) =>{
+      dispatch(addToFavouritesAction(companyToAdd))}
   }
 }
 

@@ -1,22 +1,21 @@
 import React from 'react'
-import { Col, Container, Button, Containerutton} from 'react-bootstrap'
+import { Col, Container, Button} from 'react-bootstrap'
 import { connect } from 'react-redux'
 import {Link} from 'react-router-dom'
-import { REMOVE_FROM_FAVOURITES } from '../redux/reducers'
+import { removeFromFavouritesAction } from '../redux/Actions'
 
 const mapStateToProps = (state) => {
     return {
-      favourites: state.favourites.content,
+      favourites: state.fav.favourites,
     }
   }
   
   const mapDispatchToProps = (dispatch) => {
     return {
       removeFromFav: (indexToRemove) => {
-        dispatch({
-          type: REMOVE_FROM_FAVOURITES ,
-          payload: indexToRemove,
-        })
+        dispatch(removeFromFavouritesAction(indexToRemove)
+         
+        )
       },
     }
   }

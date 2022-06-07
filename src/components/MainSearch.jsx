@@ -1,16 +1,36 @@
 import { Component } from 'react'
-import { Container, Row, Col, Form } from 'react-bootstrap'
+import { Container, Row, Col, Form, Spinner} from 'react-bootstrap'
 import Job from './Job'
 import {Link} from 'react-router-dom'
-import { hover } from '@testing-library/user-event/dist/hover'
+import {connect} from 'react-redux'
+import { getCompaniesAction, startLoadingAction } from '../redux/Actions'
+
+
+const mapStateToProps =(state) => {
+   return {
+     jobs: state.comp.companies,
+     isLoading: state.comp.isLoading
+   }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getJobs: (query)=> {
+      dispatch(getCompaniesAction(query))
+    },
+    isLoading: ()=> {
+      dispatch(startLoadingAction())
+    }
+  }
+}
+
 
 class MainSearch extends Component {
   state = {
     query: '',
-    jobs: [],
+   
   }
 
-  baseEndpoint = 'https://strive-jobs-api.herokuapp.com/jobs?search='
 
   handleChange = (e) => {
     this.setState({ query: e.target.value })
@@ -18,28 +38,20 @@ class MainSearch extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault()
+    this.props.getJobs(this.state.query)
 
-    const response = await fetch(
-      this.baseEndpoint + this.state.query + '&limit=20'
-    )
-
-    if (!response.ok) {
-      alert('Error fetching results')
-      return
-    }
-
-    const { data } = await response.json()
-
-    this.setState({ jobs: data })
+    
   }
 
   render() {
     const mystyle = {
       marginLeft:'50px',
-      border: 'solid 2px black',
+      border: 'solid 2px var(--light)',
       borderRadius:'5px',
       padding:'3px 5px 3px 5px',
-      backgroundColor:'var(--danger)',
+      backgroundColor:'var(--primary)',
+      color:'black',
+      padding: '5px 10px 5px 10px'
     };
     return (
       <Container>
@@ -62,8 +74,9 @@ class MainSearch extends Component {
               </Link>
            </Row>
           </Col>
-          <Col xs={10} className="mx-auto mb-5">
-            {this.state.jobs.map((jobData) => (
+          <Col xs={10} className="mx-auto mb-5" style={{position:'relative'}}>
+            {this.props.isLoading && <Spinner style={{position:'absolute',top:'100px',left:'400px',width:'50px',height:'50px'}} animation="border" variant="secondary" />}
+            {this.props.jobs.map((jobData) => (
               <Job key={jobData._id} data={jobData} />
             ))}
           </Col>
@@ -73,4 +86,4 @@ class MainSearch extends Component {
   }
 }
 
-export default MainSearch
+export default connect(mapStateToProps,mapDispatchToProps)(MainSearch)
