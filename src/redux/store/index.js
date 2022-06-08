@@ -19,7 +19,7 @@ const persistConfig = {
       onError: (error) => {
         console.log(error);
       },
-      secretKey: 'key',
+      secretKey: process.env.REACT_APP_KEY,
     }),
   ],
 };
