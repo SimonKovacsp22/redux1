@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, Spinner} from 'react-bootstrap'
 import Job from './Job'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import { getCompaniesAction, startLoadingAction } from '../redux/Actions'
+import { getCompaniesActionThunk, } from '../redux/Actions'
 
 
 const mapStateToProps =(state) => {
@@ -16,11 +16,9 @@ const mapStateToProps =(state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getJobs: (query)=> {
-      dispatch(getCompaniesAction(query))
+      dispatch(getCompaniesActionThunk(query))
     },
-    isLoading: ()=> {
-      dispatch(startLoadingAction())
-    }
+    
   }
 }
 
@@ -30,6 +28,9 @@ class MainSearch extends Component {
     query: '',
    
   }
+  componentDidMount=()=>{
+    console.log(this.props)
+  }
 
 
   handleChange = (e) => {
@@ -38,7 +39,10 @@ class MainSearch extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault()
+    
     this.props.getJobs(this.state.query)
+
+    
 
     
   }
@@ -51,7 +55,6 @@ class MainSearch extends Component {
       padding:'3px 5px 3px 5px',
       backgroundColor:'var(--primary)',
       color:'black',
-      padding: '5px 10px 5px 10px'
     };
     return (
       <Container>
@@ -75,7 +78,7 @@ class MainSearch extends Component {
            </Row>
           </Col>
           <Col xs={10} className="mx-auto mb-5" style={{position:'relative'}}>
-            {this.props.isLoading && <Spinner style={{position:'absolute',top:'100px',left:'400px',width:'50px',height:'50px'}} animation="border" variant="secondary" />}
+            {this.props.isLoading && <Spinner  animation="border" variant="secondary" />}
             {this.props.jobs.map((jobData) => (
               <Job key={jobData._id} data={jobData} />
             ))}

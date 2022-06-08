@@ -19,9 +19,12 @@ export const removeFromFavouritesAction = (companyIndex) => {
     }
 }
 
-export const getCompaniesAction = (query) => {
+export const getCompaniesActionThunk = (query) => {
     const baseEndpoint = 'https://strive-jobs-api.herokuapp.com/jobs?search='
     return async (dispatch) => {
+        dispatch({
+            type: IS_LOADING_TRUE
+        })
         try{
             const response = await fetch(
             baseEndpoint + query + '&limit=20'
