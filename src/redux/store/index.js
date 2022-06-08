@@ -1,16 +1,44 @@
+import {
+  combineReducers,
+  configureStore,
+  getDefaultMiddleware,
+} from "@reduxjs/toolkit";
+import favReducer from "../reducers/favReducer";
+import compReducer from "../reducers/compReducer";
 
-import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import favReducer from '../reducers/favReducer'
-import compReducer from '../reducers/compReducer'
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import { encryptTransform } from "redux-persist-transform-encrypt";
+
+
+const persistConfig = {
+  key: "root",
+  storage,
+  transforms: [
+    encryptTransform({
+      onError: (error) => {
+        console.log(error);
+      },
+      secretKey: 'key',
+    }),
+  ],
+};
+
+const combinedReducer = combineReducers({
+  fav: favReducer,
+  comp: compReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, combinedReducer);
 
 const store = configureStore({
-  reducer: combineReducers({
-    fav: favReducer,
-    comp: compReducer,
-  }),
-  // we're going to tell Redux which reducer function to use!
-})
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
 
-export default store
+const persistor = persistStore(store);
 
-// the final step now is to INJECT the redux store into our component tree
+export { store, persistor };

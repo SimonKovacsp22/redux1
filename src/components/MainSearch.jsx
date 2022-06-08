@@ -1,53 +1,50 @@
-import { Component } from 'react'
+import { useState} from 'react'
 import { Container, Row, Col, Form, Spinner} from 'react-bootstrap'
 import Job from './Job'
 import {Link} from 'react-router-dom'
-import {connect} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
 import { getCompaniesActionThunk, } from '../redux/Actions'
 
 
-const mapStateToProps =(state) => {
-   return {
-     jobs: state.comp.companies,
-     isLoading: state.comp.isLoading
-   }
-}
+// const mapStateToProps =(state) => {
+//    return {
+//      jobs: state.comp.companies,
+//      isLoading: state.comp.isLoading
+//    }
+// }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getJobs: (query)=> {
-      dispatch(getCompaniesActionThunk(query))
-    },
+
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     getJobs: (query)=> {
+//       dispatch(getCompaniesActionThunk(query))
+//     },
     
+//   }
+//}
+
+
+const MainSearch=()=> {
+  const [term, setTerm]= useState('')
+  const jobs = useSelector((state)=> state.comp.companies)
+  const isLoading = useSelector((state) => state.comp.isLoading)
+
+  const dispatch = useDispatch()
+ 
+
+
+  const handleChange = (e) => {
+    setTerm( e.target.value )
   }
-}
 
-
-class MainSearch extends Component {
-  state = {
-    query: '',
-   
-  }
-  componentDidMount=()=>{
-    console.log(this.props)
-  }
-
-
-  handleChange = (e) => {
-    this.setState({ query: e.target.value })
-  }
-
-  handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     
-    this.props.getJobs(this.state.query)
-
-    
-
-    
+    dispatch(getCompaniesActionThunk(term))
   }
 
-  render() {
+  
     const mystyle = {
       marginLeft:'50px',
       border: 'solid 2px var(--light)',
@@ -64,11 +61,11 @@ class MainSearch extends Component {
           </Col>
           <Col xs={10} className="mx-auto">
            <Row >
-              <Form style={{flexGrow:'1'}} onSubmit={this.handleSubmit}>
+              <Form style={{flexGrow:'1'}} onSubmit={handleSubmit}>
                 <Form.Control
                   type="search"
-                  value={this.state.query}
-                  onChange={this.handleChange}
+                  value={term}
+                  onChange={handleChange}
                   placeholder="type and press Enter"
                 />
               </Form>
@@ -78,8 +75,8 @@ class MainSearch extends Component {
            </Row>
           </Col>
           <Col xs={10} className="mx-auto mb-5" style={{position:'relative'}}>
-            {this.props.isLoading && <Spinner  animation="border" variant="secondary" />}
-            {this.props.jobs.map((jobData) => (
+            {isLoading && <Spinner  animation="border" variant="secondary" />}
+            {jobs.map((jobData) => (
               <Job key={jobData._id} data={jobData} />
             ))}
           </Col>
@@ -87,6 +84,6 @@ class MainSearch extends Component {
       </Container>
     )
   }
-}
 
-export default connect(mapStateToProps,mapDispatchToProps)(MainSearch)
+
+export default MainSearch
